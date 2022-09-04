@@ -36,7 +36,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 
     [2] = LAYOUT_tkl_ansi(
-        _______,              LSA(KC_F1),   _______,   _______,   LSA(KC_F4),   LSA(KC_F5),   _______,   _______,   LSA(KC_F8),   _______,   _______,   _______,   _______,    _______, _______, _______,
+        _______,              LSA(KC_F1), KC_NO,    KC_NO,   LSA(KC_F4),  LSA(KC_F5), KC_NO,    KC_NO,     LSA(KC_F8), KC_NO,    KC_NO,     KC_NO,     KC_NO,      _______, _______, _______,
         _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,    _______, _______, _______,
         _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,    _______, _______, _______,
         _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,              _______,
@@ -62,33 +62,67 @@ void keyboard_post_init_user(void){
     rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_REACTIVE);
 }
 
-// function key for now
-#define INDICATOR_KEY 82
-#define INDICATOR_COLOR RGB_RED
-#define STREAM_LAYER 2
-#define STREAM_KEYS_COLOR RGB_GOLD
+// extra colors
+#define PURPLE_PURPLE   0x6A, 0x0D, 0xAD
+
+// fn key for now
+#define INDICATOR_KEY   82
+#define INDICATOR_COLOR PURPLE_PURPLE
+
+#define MEDIA_COLOR     RGB_GREEN
+
+// Stream layer must match the layer used above
+#define STREAM_LAYER    2
+#define STREAM_KEYS_COLOR   RGB_GOLD
+
 void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
     if (get_highest_layer(layer_state) > 0) {
         uint8_t layer = get_highest_layer(layer_state);
-        uint8_t streamingKeys[] = {1, 4, 5, 8};
-        if (STREAM_LAYER == layer){
-            for(uint8_t i=0;i < sizeof(streamingKeys) / sizeof(streamingKeys[0]); i++){
-                rgb_matrix_set_color(streamingKeys[i], STREAM_KEYS_COLOR);
-            }
-            rgb_matrix_set_color(INDICATOR_KEY, INDICATOR_COLOR);
-        }else{
-            for(uint8_t row=0; row < MATRIX_ROWS; ++row){
-                for(uint8_t col=0; col <MATRIX_COLS; ++col){
-                    uint8_t index = g_led_config.matrix_co[row][col];
-
-                    if (index >= led_min
-                            && index <= led_max
-                            && index != NO_LED
-                            && keymap_key_to_keycode(layer, (keypos_t){col,row}) > KC_TRNS) {
-                        rgb_matrix_set_color(index, INDICATOR_COLOR);
-                    }
-                }
-            }
-        }
-    }
+        for(uint8_t row=0; row < MATRIX_ROWS; ++row){
+            for(uint8_t col=0; col <MATRIX_COLS; ++col){
+                uint8_t index = g_led_config.matrix_co[row][col];
+                uint16_t keycode = keymap_key_to_keycode(layer, (keypos_t){col,row});
+                if (index >= led_min && index <= led_max){
+                    switch (index){
+                        case NO_LED:
+                            break;
+                        // Media keys
+                        case 48: // end
+                        case 75: // up arrow
+                        case 79: // space
+                        case 83: // ctrl
+                        case 84: // left arrow
+                        case 85: // down arrow
+                        case 86: // right arrow
+                            if (KC_NO == keycode)
+                                rgb_matrix_set_color(index, RGB_BLACK);
+                            else if (keycode > KC_TRNS)
+                                rgb_matrix_set_color(index, MEDIA_COLOR);
+                            break;
+                        // Streaming hotkeys for OBS
+                        case 1: // F1
+                        case 4: // F4
+                        case 5: // F5
+                        case 8: // F8
+                            if (STREAM_LAYER == layer) {
+                                rgb_matrix_set_color(index, STREAM_KEYS_COLOR);
+                                break;
+                            }
+                        default:
+                            switch(keycode){
+                                case KC_NO:
+                                    rgb_matrix_set_color(index, RGB_BLACK);
+                                    break;
+                                case QK_BOOT:
+                                    rgb_matrix_set_color(index, RGB_RED);
+                                    break;
+                                default:
+                                    if (keycode > KC_TRNS)
+                                        rgb_matrix_set_color(index, INDICATOR_COLOR);
+                            } // keycode switch
+                    } // index switch
+                } // end if LED && in led_min/max
+            } // end of col
+        } // end of row
+    } // if default layer
 }
