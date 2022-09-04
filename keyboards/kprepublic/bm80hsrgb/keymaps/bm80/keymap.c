@@ -81,12 +81,15 @@ bool process_record_user(uint16_t keycode, keyrecord_t *keyrecord){
 
 // extra colors
 #define PURPLE_PURPLE   0x6A, 0x0D, 0xAD
+#define DARK_PURPLE     0x55, 0x0A, 0x8A
+#define SATURATED_GREEN 0x00, 0x88, 0x00
+#define LIGHT_GREEN     0x44, 0xFF, 0x44
 
 // fn key for now
 #define INDICATOR_KEY   82
 #define INDICATOR_COLOR PURPLE_PURPLE
 
-#define MEDIA_COLOR     RGB_GREEN
+#define MEDIA_COLOR     LIGHT_GREEN
 
 // Stream layer must match the layer used above
 #define STREAM_LAYER    2
