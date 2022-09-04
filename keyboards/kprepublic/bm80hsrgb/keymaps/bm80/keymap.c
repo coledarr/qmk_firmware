@@ -116,6 +116,12 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
                             else if (keycode > KC_TRNS)
                                 rgb_matrix_set_color(index, MEDIA_COLOR);
                             break;
+                        case INDICATOR_KEY:
+                            if (STREAM_LAYER == layer)
+                                rgb_matrix_set_color(index, STREAM_KEYS_COLOR);
+                            else
+                                rgb_matrix_set_color(index, INDICATOR_COLOR);
+                            break;
                         // Streaming hotkeys for OBS
                         case 1: // F1
                         case 4: // F4
