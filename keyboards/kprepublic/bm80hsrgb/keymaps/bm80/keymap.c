@@ -15,6 +15,11 @@
  */
 #include QMK_KEYBOARD_H
 
+// Define my own keycodes (handled in process_record_user function below)
+enum my_keycodes {
+    V_RGBFAV = SAFE_RANGE
+};
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [0] = LAYOUT_tkl_ansi(
@@ -27,8 +32,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 
     [1] = LAYOUT_tkl_ansi(
-        _______,              RGB_M_P,   RGB_M_B,   RGB_M_R,   RGB_M_SW,  RGB_M_SN,  RGB_M_K,   RGB_M_X,   RGB_M_G,   RGB_M_T,   _______,   _______,   _______,    _______, _______, QK_BOOT,
-        _______,   RGB_TOG,   RGB_MOD,   RGB_HUI,   RGB_SAI,   RGB_VAI,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   TG(2),    _______, _______, _______,
+        _______,              V_RGBFAV,  RGB_M_P,   RGB_M_B,   RGB_M_R,   RGB_M_SW,  RGB_M_SN,  RGB_M_K,   RGB_M_X,   RGB_M_G,   RGB_M_T,   _______,   _______,    _______, _______, QK_BOOT,
+        _______,   RGB_TOG,   RGB_MOD,   RGB_HUI,   RGB_SAI,   RGB_VAI,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   TG(2),      _______, _______, _______,
         _______,   _______,   RGB_RMOD,  RGB_HUD,   RGB_SAD,   RGB_VAD,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,    _______, KC_MPLY, _______,
         _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,              _______,
         _______,              _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,              _______,             KC_VOLU,
@@ -60,6 +65,18 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 void keyboard_post_init_user(void){
     rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_REACTIVE);
+}
+
+// Handle my keycodes so they work
+bool process_record_user(uint16_t keycode, keyrecord_t *keyrecord){
+    switch(keycode){
+        case V_RGBFAV:
+            // maybe I should save it? (remove _noeeprom)
+            rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_REACTIVE);
+            return false;
+        default:
+            return true;
+    }
 }
 
 // extra colors
