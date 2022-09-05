@@ -42,7 +42,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [2] = LAYOUT_tkl_ansi(
         _______,              LGUI(KC_7), KC_NO,    LSA(KC_F1), LSA(KC_F4), LSA(KC_F5), KC_NO,  KC_NO,     LSA(KC_F8), KC_NO,    KC_NO,     KC_NO,     KC_NO,      _______, _______, _______,
-        _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,    _______, _______, _______,
+        _______,   LGUI(KC_1), LGUI(KC_2), LGUI(KC_3), LGUI(KC_4), LGUI(KC_5), LGUI(KC_6), KC_NO, KC_NO,   KC_NO,     KC_NO,     KC_NO,     KC_NO,     _______,    _______, _______, _______,
         _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,    _______, _______, _______,
         _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,              _______,
         _______,              _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,              _______,             _______,
@@ -95,6 +95,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *keyrecord){
 #define STREAM_LAYER    2
 #define STREAM_KEYS_COLOR   RGB_GOLD
 #define OBS_KEY_COLOR       RGB_WHITE
+#define APP_KEYS_COLOR      RGB_GOLDENROD
 
 void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
     if (get_highest_layer(layer_state) > 0) {
@@ -138,6 +139,16 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
                         case 8: // F8
                             if (STREAM_LAYER == layer) {
                                 rgb_matrix_set_color(index, STREAM_KEYS_COLOR);
+                                break;
+                            }
+                        case 17: // 1
+                        case 18: // 2
+                        case 19: // 3
+                        case 20: // 4
+                        case 21: // 5
+                        case 22: // 6
+                            if (STREAM_LAYER == layer) {
+                                rgb_matrix_set_color(index, APP_KEYS_COLOR);
                                 break;
                             }
                         default:
