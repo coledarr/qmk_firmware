@@ -37,7 +37,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______,   _______,   RGB_RMOD,  RGB_HUD,   RGB_SAD,   RGB_VAD,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,    _______, KC_MPLY, _______,
         _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,              _______,
         _______,              _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,              _______,             KC_VOLU,
-        _______,   _______,   _______,                                    KC_MPLY,                                    _______,   _______,   _______,   KC_MPLY,    KC_MPRV, KC_VOLD, KC_MNXT
+        _______,   _______,   _______,                                    _______,                                    _______,   _______,   _______,   _______,    KC_MPRV, KC_VOLD, KC_MNXT
     ),
 
     [2] = LAYOUT_tkl_ansi(
@@ -90,6 +90,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *keyrecord){
 #define INDICATOR_COLOR PURPLE_PURPLE
 
 #define MEDIA_COLOR     LIGHT_GREEN
+#define PLAY_PAUSE_COLOR    RGB_GREEN
 
 // Stream layer must match the layer used above
 #define STREAM_LAYER    2
@@ -109,18 +110,6 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
                         case NO_LED:
                             break;
                         // Media keys
-                        case 48: // end
-                        case 75: // up arrow
-                        case 79: // space
-                        case 83: // ctrl
-                        case 84: // left arrow
-                        case 85: // down arrow
-                        case 86: // right arrow
-                            if (KC_NO == keycode)
-                                rgb_matrix_set_color(index, RGB_BLACK);
-                            else if (keycode > KC_TRNS)
-                                rgb_matrix_set_color(index, MEDIA_COLOR);
-                            break;
                         case INDICATOR_KEY:
                             if (STREAM_LAYER == layer)
                                 rgb_matrix_set_color(index, STREAM_KEYS_COLOR);
@@ -158,6 +147,15 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
                                     break;
                                 case QK_BOOT:
                                     rgb_matrix_set_color(index, RGB_RED);
+                                    break;
+                                case KC_MPLY:
+                                    rgb_matrix_set_color(index, PLAY_PAUSE_COLOR);
+                                    break;
+                                case KC_MPRV:
+                                case KC_MNXT:
+                                case KC_VOLU:
+                                case KC_VOLD:
+                                    rgb_matrix_set_color(index, MEDIA_COLOR);
                                     break;
                                 default:
                                     if (keycode > KC_TRNS)
