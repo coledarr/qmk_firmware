@@ -41,7 +41,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 
     [2] = LAYOUT_tkl_ansi(
-        _______,              LSA(KC_F1), KC_NO,    KC_NO,   LSA(KC_F4),  LSA(KC_F5), KC_NO,    KC_NO,     LSA(KC_F8), KC_NO,    KC_NO,     KC_NO,     KC_NO,      _______, _______, _______,
+        _______,              LGUI(KC_7), KC_NO,    LSA(KC_F1), LSA(KC_F4), LSA(KC_F5), KC_NO,  KC_NO,     LSA(KC_F8), KC_NO,    KC_NO,     KC_NO,     KC_NO,      _______, _______, _______,
         _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,    _______, _______, _______,
         _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,    _______, _______, _______,
         _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,              _______,
@@ -94,6 +94,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *keyrecord){
 // Stream layer must match the layer used above
 #define STREAM_LAYER    2
 #define STREAM_KEYS_COLOR   RGB_GOLD
+#define OBS_KEY_COLOR       RGB_WHITE
 
 void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
     if (get_highest_layer(layer_state) > 0) {
@@ -127,6 +128,11 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
                             break;
                         // Streaming hotkeys for OBS
                         case 1: // F1
+                            if (STREAM_LAYER == layer) {
+                                rgb_matrix_set_color(index, OBS_KEY_COLOR);
+                                break;
+                            }
+                        case 3: // F3
                         case 4: // F4
                         case 5: // F5
                         case 8: // F8
