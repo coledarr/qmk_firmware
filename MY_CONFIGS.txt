@@ -1,0 +1,2 @@
+compile for my bm80hsrgb:
+    qmk compile -kb kprepublic/bm80hsrgb -km bm80
