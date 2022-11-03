@@ -135,6 +135,7 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
                         case 4: // F4
                         case 5: // F5
                         case 8: // F8
+                        case 9: // F9
                             if (STREAM_LAYER == layer) {
                                 rgb_matrix_set_color(index, STREAM_KEYS_COLOR);
                                 break;
