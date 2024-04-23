@@ -17,7 +17,8 @@
 
 // Define my own keycodes (handled in process_record_user function below)
 enum my_keycodes {
-    V_RGBFAV = SAFE_RANGE
+    V_RGBFAV = SAFE_RANGE,
+    MY_HBRT,
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -59,8 +60,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 
     [4] = LAYOUT_tkl_ansi(
-        KC_SLEP,              _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,    _______, _______, QK_BOOT,
-        _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,    _______, _______, _______,
+        MY_HBRT,              _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,    _______, _______, QK_BOOT,
+        KC_SLEP,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,    _______, _______, _______,
         _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,    _______, _______, _______,
         _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,              _______,
         _______,              _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,              _______,             _______,
@@ -79,22 +80,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 
 };
-
-void keyboard_post_init_user(void){
-    rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_REACTIVE);
-}
-
-// Handle my keycodes so they work
-bool process_record_user(uint16_t keycode, keyrecord_t *keyrecord){
-    switch(keycode){
-        case V_RGBFAV:
-            // maybe I should save it? (remove _noeeprom)
-            rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_REACTIVE);
-            return false;
-        default:
-            return true;
-    }
-}
 
 // extra colors
 #define PURPLE_PURPLE   0x6A, 0x0D, 0xAD
@@ -116,6 +101,33 @@ bool process_record_user(uint16_t keycode, keyrecord_t *keyrecord){
 #define STREAM_KEYS_COLOR   RGB_GOLD
 #define OBS_KEY_COLOR       RGB_WHITE
 #define APP_KEYS_COLOR      RGB_GOLDENROD
+
+void keyboard_post_init_user(void){
+    rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_REACTIVE);
+}
+
+// Handle my keycodes so they work
+bool process_record_user(uint16_t keycode, keyrecord_t *keyrecord){
+    switch(keycode){
+        case V_RGBFAV:
+            // maybe I should save it? (remove _noeeprom)
+            rgb_matrix_set_color_all(FAVRGB_COLOR);
+            rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_REACTIVE);
+            return false;
+        case MY_HBRT:
+            if(keyrecord->event.pressed){
+                // bring up Windows-X menu
+                SEND_STRING(SS_LGUI("x") SS_DELAY(50) "uh");
+                // shUtdown or signout submenu
+                //SEND_STRING("u");
+                // Hibernate
+                //SEND_STRING("h");
+            }
+            return true;
+        default:
+            return true;
+    }
+}
 
 bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
     if (get_highest_layer(layer_state) > 0) {
@@ -172,6 +184,7 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
                                 case KC_PWR:
                                     rgb_matrix_set_color(index, RGB_RED);
                                     break;
+                                case MY_HBRT:
                                 case KC_SLEP:
                                     rgb_matrix_set_color(index, RGB_ORANGE);
                                     break;
