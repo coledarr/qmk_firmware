@@ -117,7 +117,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *keyrecord){
         case MY_HBRT:
             if(keyrecord->event.pressed){
                 // bring up Windows-X menu
-                SEND_STRING(SS_LGUI("x") SS_DELAY(50) "uh");
+                SEND_STRING(SS_LGUI("x") SS_DELAY(500) "uh");
                 // shUtdown or signout submenu
                 //SEND_STRING("u");
                 // Hibernate
